@@ -1,16 +1,26 @@
 const ErrorResponse = require('../utils/ErrorResponse');
 
 const errorHandler = (err, req, res, next) => {
-  let error = { ...err };
-
-  error.message = err.message;
-
   // Log to console for dev
-  console.log(err);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('-----ERROR-----'.red.underline);
+    console.log(err);
+    console.log('---------------'.red.underline);
+  }
 
-  res.status(error.statusCode || 500).json({
+  if (err.errorFlag === 'express-validator') {
+    res.status(err.statusCode || 500).json({
+      success: false,
+      error: err.message,
+      flag: 'express-validator',
+      errors: err.payload,
+    });
+    return;
+  }
+
+  res.status(err.statusCode || 500).json({
     success: false,
-    error: error.message || 'Server Error',
+    error: err.message || 'Server Error',
   });
 };
 
