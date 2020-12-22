@@ -24,10 +24,30 @@ exports.register = async (req, res, next) => {
       email,
       password,
     });
-    res.status(200).json({
-      success: true,
-    });
+    sendTokenResponse(user, 200, res);
   } catch (err) {
     return next(err);
   }
+};
+
+// Get token from model, create cookie and send response
+const sendTokenResponse = (user, statusCode, res) => {
+  // Create token
+  const token = user.getSignedJwtToken();
+
+  const option = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_ENV === 'production') {
+    option.secure = true;
+  }
+
+  res.status(statusCode).cookie('token', token, option).json({
+    success: true,
+    token,
+  });
 };
