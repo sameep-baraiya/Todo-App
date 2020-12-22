@@ -1,0 +1,18 @@
+{
+  "name": "todoapp",
+  "version": "1.0.0",
+  "description": "Todo app with nodejs,express,mongoDB,reactjs.",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "Baraiya Sameep",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
