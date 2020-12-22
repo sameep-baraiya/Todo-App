@@ -8,6 +8,17 @@ const errorHandler = (err, req, res, next) => {
     console.log('---------------'.red.underline);
   }
 
+  if (err.name === 'MongoError') {
+    if (err.code === 11000) {
+      res.status(404).json({
+        success: false,
+        error: 'Duplicate field entered',
+        flag: 'duplicate-field',
+      });
+      return;
+    }
+  }
+
   if (err.errorFlag === 'express-validator') {
     res.status(err.statusCode || 500).json({
       success: false,
