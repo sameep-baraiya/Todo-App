@@ -14,7 +14,6 @@ const TodoSchema = new mongoose.Schema(
       trim: true,
       maxlength: [100, 'Description can not be more than 100 characters'],
     },
-    todos: { type: Array, default: [] },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
@@ -26,5 +25,13 @@ const TodoSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+// Reverse populate with virtuals
+TodoSchema.virtual('tasks', {
+  ref: 'TodoAction',
+  localField: '_id',
+  foreignField: 'todo',
+  justOne: false,
+});
 
 module.exports = mongoose.model('Todo', TodoSchema);
