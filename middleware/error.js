@@ -19,6 +19,15 @@ const errorHandler = (err, req, res, next) => {
     }
   }
 
+  if (err.errorFlag === 'invalid-credentials') {
+    res.status(err.statusCode || 500).json({
+      success: false,
+      error: err.message,
+      flag: 'invalid-credentials',
+    });
+    return;
+  }
+
   if (err.errorFlag === 'express-validator') {
     res.status(err.statusCode || 500).json({
       success: false,

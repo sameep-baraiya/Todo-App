@@ -18,3 +18,16 @@ exports.registerVal = [
   body('email').not().isEmpty().withMessage('email is required'),
   body('email').isEmail().withMessage('email must be valid'),
 ];
+
+exports.loginVal = [
+  body('password').not().isEmpty().withMessage('password is required'),
+  body('password')
+    .isLength({ min: 6, max: 16 })
+    .withMessage('password must be 6-16 characters in length')
+    .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/)
+    .withMessage(
+      'password must be alphanumeric, contain special character(!@#$%^&*)'
+    ),
+  body('email').not().isEmpty().withMessage('email is required'),
+  body('email').isEmail().withMessage('email must be valid'),
+];
