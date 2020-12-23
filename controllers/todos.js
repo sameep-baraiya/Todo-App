@@ -54,7 +54,7 @@ exports.addTodo = async (req, res, next) => {
   }
 };
 
-// @desc    Add todotask
+// @desc    Add todoaction
 // @route   POST /api/v1/todos/:id
 // @access  Private
 exports.addTodoAction = async (req, res, next) => {
@@ -65,6 +65,94 @@ exports.addTodoAction = async (req, res, next) => {
       success: true,
       data: todoAction,
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Update todo
+// @route   PUT /api/v1/todos/:id
+// @access  Private
+exports.updateTodo = async (req, res, next) => {
+  try {
+    let todo = await Todo.findById(req.params.id);
+    if (!todo) {
+      return next(
+        new ErrorResponse(`Todo not found with id of ${req.params.id}`, 404)
+      );
+    }
+
+    todo = await Todo.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({ success: true, data: todo });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Update todoaction
+// @route   PUT /api/v1/todos/todoaction/:id
+// @access  Private
+exports.updateTodoAction = async (req, res, next) => {
+  try {
+    let todoAction = await TodoAction.findById(req.params.id);
+    if (!todoAction) {
+      return next(
+        new ErrorResponse(
+          `TodoAction not found with id of ${req.params.id}`,
+          404
+        )
+      );
+    }
+
+    todoAction = await TodoAction.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({ success: true, data: todoAction });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Delet todo
+// @route   DELETE /api/v1/todos/:id
+// @access  Private
+exports.deleteTodo = async (req, res, next) => {
+  try {
+    const todo = await Todo.findById(req.params.id);
+    if (!todo) {
+      return next(
+        new ErrorResponse(`Todo not found with id of ${req.params.id}`, 404)
+      );
+    }
+
+    todo.remove();
+    res.status(200).json({ success: true, data: {} });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Delet todoaction
+// @route   DELETE /api/v1/todos/:id
+// @access  Private
+exports.deleteTodoAction = async (req, res, next) => {
+  try {
+    const todoAction = await TodoAction.findById(req.params.id);
+    if (!todoAction) {
+      return next(
+        new ErrorResponse(
+          `TodoAction not found with id of ${req.params.id}`,
+          404
+        )
+      );
+    }
+
+    todoAction.remove();
+    res.status(200).json({ success: true, data: {} });
   } catch (err) {
     next(err);
   }

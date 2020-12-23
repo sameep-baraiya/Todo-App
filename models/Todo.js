@@ -34,4 +34,11 @@ TodoSchema.virtual('tasks', {
   justOne: false,
 });
 
+// Cascade delete todoaction when a todo is deleted
+TodoSchema.pre('remove', async function (next) {
+  console.log(`Todoactions bing removed from todo ${this._id}`.green);
+  await this.model('TodoAction').deleteMany({ todo: this._id });
+  next();
+});
+
 module.exports = mongoose.model('Todo', TodoSchema);
