@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../context/auth/AuthProvider';
+import axios from 'axios';
 
 const Navbar = () => {
+  const [authObj, setAuthObj, register] = useContext(AuthContext);
+
   const [isActive, setActive] = useState(false);
 
   const toggleClass = () => {
     setActive(!isActive);
   };
   return (
-    <nav className='navbar' role='navigation' aria-label='main navigation'>
+    <nav
+      className='navbar is-link'
+      role='navigation'
+      aria-label='main navigation'
+    >
       <div className='navbar-brand'>
         <a className='navbar-item' href='/#'>
           <span className='is-size-4 has-text-weight-bold'>
@@ -45,16 +53,43 @@ const Navbar = () => {
 
         <div className='navbar-end'>
           <div className='navbar-item'>
-            <div className='buttons'>
-              <button className='button is-link'>
-                <strong>Log out</strong>
-              </button>
-            </div>
+            {authObj.isAuthenticated
+              ? NavbarUser(true, authObj.username)
+              : NavbarUser(false)}
           </div>
         </div>
       </div>
     </nav>
   );
+};
+
+const NavbarUser = (flag, username = '') => {
+  const [authObj, setAuthObj, register] = useContext(AuthContext);
+  const logout = async () => {
+    try {
+      const res = await axios.get('/api/v1/auth/logout');
+      if (res.data !== null) {
+        setAuthObj({
+          isAuthenticated: false,
+          token: null,
+          username: '',
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  if (flag) {
+    return (
+      <div className='buttons'>
+        <button className='button is-warning' onClick={logout}>
+          <strong>Log Out {username}</strong>
+        </button>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
 };
 
 export default Navbar;

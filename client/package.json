@@ -40,5 +40,6 @@
   "devDependencies": {
     "bulma": "^0.9.1",
     "node-sass": "^4.9.2"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }
