@@ -48,6 +48,8 @@ const Register = () => {
               token: res.token,
               username: username,
             });
+            localStorage.setItem('todoapp-token', res.token);
+            localStorage.setItem('todoapp-username', username);
             goTodos();
           } else {
             console.log('Register Error');

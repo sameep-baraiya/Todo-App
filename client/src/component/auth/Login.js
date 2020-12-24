@@ -41,6 +41,8 @@ const Login = () => {
               token: res.token,
               username: email,
             });
+            localStorage.setItem('todoapp-token', res.token);
+            localStorage.setItem('todoapp-username', email);
             goTodos();
           } else {
             console.log('Login Error');

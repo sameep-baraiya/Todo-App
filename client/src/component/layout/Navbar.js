@@ -1,16 +1,33 @@
-import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { AuthContext } from '../../context/auth/AuthProvider';
 import axios from 'axios';
 
 const Navbar = () => {
-  const [authObj, ,] = useContext(AuthContext);
+  const history = useHistory();
+  const [authObj, setAuthObj] = useContext(AuthContext);
 
   const [isActive, setActive] = useState(false);
 
   const toggleClass = () => {
     setActive(!isActive);
   };
+  useEffect(() => {
+    const tempUsername = localStorage.getItem('todoapp-username');
+    const tempToken = localStorage.getItem('todoapp-token');
+
+    if (tempUsername !== null) {
+      if (tempUsername.length > 1) {
+        setAuthObj({
+          username: tempUsername,
+          token: tempToken,
+          isAuthenticated: true,
+        });
+        history.replace('/todos');
+      }
+    }
+    // eslint-disable-next-line
+  }, []);
   return (
     <nav
       className='navbar is-link'
@@ -19,9 +36,7 @@ const Navbar = () => {
     >
       <div className='navbar-brand'>
         <a className='navbar-item' href='/#'>
-          <span className='is-size-4 has-text-weight-bold'>
-            TodoApp<small className='is-size-6'>.com</small>
-          </span>
+          <span className='is-size-4 has-text-weight-bold'>TodoApp</span>
         </a>
 
         <span
@@ -74,6 +89,8 @@ const NavbarUser = (flag, username = '') => {
           token: null,
           username: '',
         });
+        localStorage.setItem('todoapp-username', '');
+        localStorage.setItem('todoapp-token', '');
       }
     } catch (err) {
       console.log(err);
