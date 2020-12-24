@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { AuthContext } from '../../context/auth/AuthProvider';
 
 const TodoRoute = ({ component: Component, ...rest }) => {
-  const [authObj, setAuthObj, register] = useContext(AuthContext);
+  const [authObj, ,] = useContext(AuthContext);
   return (
     <Route
       {...rest}

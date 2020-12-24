@@ -4,7 +4,7 @@ import { AuthContext } from '../../context/auth/AuthProvider';
 import axios from 'axios';
 
 const Navbar = () => {
-  const [authObj, setAuthObj, register] = useContext(AuthContext);
+  const [authObj, ,] = useContext(AuthContext);
 
   const [isActive, setActive] = useState(false);
 
@@ -64,7 +64,7 @@ const Navbar = () => {
 };
 
 const NavbarUser = (flag, username = '') => {
-  const [authObj, setAuthObj, register] = useContext(AuthContext);
+  const [, setAuthObj] = useContext(AuthContext);
   const logout = async () => {
     try {
       const res = await axios.get('/api/v1/auth/logout');
