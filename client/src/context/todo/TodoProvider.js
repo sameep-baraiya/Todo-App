@@ -104,6 +104,22 @@ export const TodoProvider = (props) => {
     }
   };
 
+  const updateTask = async (taskId, isDone) => {
+    if (isAuthenticated) {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      try {
+        const res = await axios.put(`/api/v1/todos/todoaction/${taskId}`, {
+          isDone: isDone,
+        });
+        if (res !== null) {
+          console.log(res.data);
+        }
+      } catch (err) {
+        throw err;
+      }
+    }
+  };
+
   return (
     <TodoContext.Provider
       value={[
@@ -115,6 +131,7 @@ export const TodoProvider = (props) => {
         updateTodo,
         addTask,
         deleteTask,
+        updateTask,
       ]}
     >
       {props.children}

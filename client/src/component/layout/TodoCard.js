@@ -3,19 +3,22 @@ import PropTypes from 'prop-types';
 import { TodoContext } from '../../context/todo/TodoProvider';
 
 const TodoCard = ({ title, description, tasks, todoId, reRender }) => {
-  const [, , , , deleteTodo, updateTodo, addTask, deleteTask] = useContext(
-    TodoContext
-  );
-  const [editFlag, setEditFlag] = useState(false);
+  const [
+    ,
+    ,
+    ,
+    ,
+    deleteTodo,
+    updateTodo,
+    addTask,
+    deleteTask,
+    updateTask,
+  ] = useContext(TodoContext);
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [todoEditFlag, setTodoEditFlag] = useState(false);
   const [addTaskFlag, setAddTaskFlag] = useState(false);
   const [newTask, setNewTask] = useState('');
-
-  const onEditClick = (e) => {
-    setEditFlag(!editFlag);
-  };
 
   const onEditTodoClick = (e) => {
     setTodoEditFlag(true);
@@ -70,6 +73,18 @@ const TodoCard = ({ title, description, tasks, todoId, reRender }) => {
     }
   };
 
+  const changeIsDone = async (e) => {
+    try {
+      await updateTask(
+        e.target.getAttribute('data-key'),
+        !e.target.getAttribute('checked')
+      );
+      reRender();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className='card'>
       <div className='card-content'>
@@ -79,11 +94,8 @@ const TodoCard = ({ title, description, tasks, todoId, reRender }) => {
         <p className='is-size-6'>{description}</p>
         {tasks.map((t) => (
           <div id={t.id} key={t.id}>
-            {EditText(t.isDone, t.task, editFlag)}
+            {EditText(t.isDone, t.task, changeIsDone, t.id)}
             <div className='is-pulled-right has-text-grey is-size-7'>
-              <span className='is-clickable' onClick={onEditClick}>
-                Edit
-              </span>{' '}
               <span
                 className='is-clickable'
                 onClick={onDeleteTaskClick}
@@ -170,17 +182,18 @@ const TodoCard = ({ title, description, tasks, todoId, reRender }) => {
   );
 };
 
-const EditText = (isDone, task, editFlag) => {
-  if (editFlag === false) {
-    return (
-      <label className='checkbox'>
-        <input type='checkbox' defaultChecked={isDone} />
-        {' ' + task}
-      </label>
-    );
-  } else {
-    return <input className='input' type='text' placeholder='Text input' />;
-  }
+const EditText = (isDone, task, changeIsDone, key) => {
+  return (
+    <label className='checkbox'>
+      <input
+        type='checkbox'
+        checked={isDone}
+        onChange={changeIsDone}
+        data-key={key}
+      />
+      {' ' + task}
+    </label>
+  );
 };
 
 TodoCard.prototype = {
