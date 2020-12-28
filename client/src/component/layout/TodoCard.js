@@ -3,11 +3,15 @@ import PropTypes from 'prop-types';
 import { TodoContext } from '../../context/todo/TodoProvider';
 
 const TodoCard = ({ title, description, tasks, todoId, reRender }) => {
-  const [, , , , deleteTodo, updateTodo] = useContext(TodoContext);
+  const [, , , , deleteTodo, updateTodo, addTask, deleteTask] = useContext(
+    TodoContext
+  );
   const [editFlag, setEditFlag] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [todoEditFlag, setTodoEditFlag] = useState(false);
+  const [addTaskFlag, setAddTaskFlag] = useState(false);
+  const [newTask, setNewTask] = useState('');
 
   const onEditClick = (e) => {
     setEditFlag(!editFlag);
@@ -15,6 +19,19 @@ const TodoCard = ({ title, description, tasks, todoId, reRender }) => {
 
   const onEditTodoClick = (e) => {
     setTodoEditFlag(true);
+  };
+
+  const onAddTaskClick = (e) => {
+    setAddTaskFlag(true);
+  };
+
+  const onDeleteTaskClick = async (e) => {
+    try {
+      await deleteTask(e.target.getAttribute('data-key'));
+      reRender();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const onEditTodoDoneClick = async (e) => {
@@ -29,6 +46,19 @@ const TodoCard = ({ title, description, tasks, todoId, reRender }) => {
       }
     }
     setTodoEditFlag(false);
+  };
+
+  const onAddTodoDoneClick = async (e) => {
+    if (newTask !== '') {
+      try {
+        await addTask(newTask, todoId);
+        setNewTask('');
+        reRender();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    setAddTaskFlag(false);
   };
 
   const onDeleteClick = async (e) => {
@@ -54,7 +84,13 @@ const TodoCard = ({ title, description, tasks, todoId, reRender }) => {
               <span className='is-clickable' onClick={onEditClick}>
                 Edit
               </span>{' '}
-              <span className='is-clickable'>Delete</span>
+              <span
+                className='is-clickable'
+                onClick={onDeleteTaskClick}
+                data-key={t.id}
+              >
+                Delete
+              </span>
             </div>
           </div>
         ))}
@@ -88,9 +124,33 @@ const TodoCard = ({ title, description, tasks, todoId, reRender }) => {
             </div>
           </div>
         ) : null}
+        {addTaskFlag ? (
+          <div>
+            <div>
+              <input
+                className='input'
+                type='text'
+                placeholder='Task'
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+              />
+            </div>
+            <div>
+              <button
+                className='button is-link is-fullwidth'
+                onClick={onAddTodoDoneClick}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
       <footer className='card-footer'>
-        <button className='card-footer-item button is-success'>
+        <button
+          className='card-footer-item button is-success'
+          onClick={onAddTaskClick}
+        >
           <strong>Add Task</strong>
         </button>
         <button

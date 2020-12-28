@@ -11,6 +11,7 @@ const TodoActionSchema = new mongoose.Schema(
     isDone: {
       type: Boolean,
       required: [true, 'Please add a isDone'],
+      default: false,
     },
     todo: {
       type: mongoose.Schema.ObjectId,

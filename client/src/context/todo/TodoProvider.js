@@ -74,6 +74,36 @@ export const TodoProvider = (props) => {
     }
   };
 
+  const addTask = async (newTask, todoId) => {
+    if (isAuthenticated) {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      try {
+        const res = await axios.post(`/api/v1/todos/${todoId}`, {
+          task: newTask,
+        });
+        if (res !== null) {
+          console.log(res.data);
+        }
+      } catch (err) {
+        throw err;
+      }
+    }
+  };
+
+  const deleteTask = async (taskId) => {
+    if (isAuthenticated) {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      try {
+        const res = await axios.delete(`/api/v1/todos/todoaction/${taskId}`);
+        if (res !== null) {
+          console.log(res.data);
+        }
+      } catch (err) {
+        throw err;
+      }
+    }
+  };
+
   return (
     <TodoContext.Provider
       value={[
@@ -83,6 +113,8 @@ export const TodoProvider = (props) => {
         addTodo,
         deleteTodo,
         updateTodo,
+        addTask,
+        deleteTask,
       ]}
     >
       {props.children}

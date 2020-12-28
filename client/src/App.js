@@ -23,28 +23,10 @@ import NotFound from './component/page/NotFound';
 import { AuthProvider } from './context/auth/AuthProvider';
 import { TodoProvider } from './context/todo/TodoProvider';
 
-// Temp
-// import TodoCard from './component/layout/TodoCard';
-// const title = 'Test Title';
-// const description = 'Test Description';
-// const tasks = [
-//   {
-//     id: 1,
-//     isDone: false,
-//     task: 'Todo Task 1',
-//   },
-//   {
-//     id: 2,
-//     isDone: true,
-//     task: 'Todo Task 2',
-//   },
-// ];
-
 function App() {
   return (
     <AuthProvider>
       <TodoProvider>
-        {/* <TodoCard title={title} description={description} tasks={tasks} /> */}
         <Router>
           <Navbar />
           <Switch>
